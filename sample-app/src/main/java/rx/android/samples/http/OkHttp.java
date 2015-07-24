@@ -21,6 +21,7 @@ import java.util.UUID;
 
 import rx.Observable;
 import rx.Subscriber;
+import rx.android.samples.util.FileUtil;
 
 /**
  *  
@@ -79,6 +80,7 @@ public class OkHttp {
 
 
     public   static     void   downFile(final String  url,final  Subscriber<? super String> subscriber){
+
         Request   request = new Request.Builder().tag(getUuid()).url(url).build();
         mOkHttpClient.newCall(request).enqueue(new Callback() {
             @Override
@@ -89,19 +91,20 @@ public class OkHttp {
             @Override
             public void onResponse(Response response) throws IOException {
                    if(response.isSuccessful()){
-                       File   file  =  new File(Environment.getExternalStorageDirectory().getAbsolutePath()+File.separator+"temp");
-
+                      String  directory  =  Environment.getExternalStorageDirectory().getAbsolutePath()+File.separator+"temp";
+                       FileUtil.makeDirectory(directory);
                        String filename = url.substring(url.lastIndexOf('/') + 1, url.length());
-                      File  downloadFile = new File(file.getAbsolutePath()+File.separator+filename);
+                       File  downloadFile = new File(directory+File.separator+filename);
                        FileOutputStream   buffer = new FileOutputStream(downloadFile);
                        InputStream instream  = response.body().byteStream();
                        try {
                            if(null != instream){
+
                                byte[] tmp = new byte[BUFFER_SIZE];
-                               int l, count = 0;
+                               int l ;
                                // do not send messages if request has been cancelled
                                while ((l = instream.read(tmp)) != -1 && !Thread.currentThread().isInterrupted()) {
-                                   count += l;
+
                                    buffer.write(tmp, 0, l);
 
                                }
