@@ -21,6 +21,8 @@ import java.util.UUID;
 
 import rx.Observable;
 import rx.Subscriber;
+import rx.android.samples.RequestModel;
+import rx.android.samples.ResultSub;
 import rx.android.samples.util.FileUtil;
 
 /**
@@ -45,8 +47,8 @@ public class OkHttp {
     }
 
 
-    public static void doPost(RequestBody requestBody, String url
-                            ) {
+    public static void doPost(RequestBody requestBody,RequestModel  requestModel, String url
+                           ,final  Subscriber<? super ResultSub> subscriber ) {
 
         Request request = new Request.Builder().url(url).post(requestBody)
                 .build();
@@ -58,6 +60,18 @@ public class OkHttp {
             if (response.isSuccessful()) {
                 try {
                     JSONObject resultJsonObject = new JSONObject(response.body().string());
+                    ResultSub   sub = new ResultSub();
+
+                    sub.requestModel = requestModel;
+                    sub.obj = resultJsonObject;
+                    sub.code = requestcode;
+                    if(requestModel == RequestModel.DATA){
+
+                        subscriber.onCompleted();
+                    }else{
+                        subscriber.onNext(sub);
+                    }
+
 
                 } catch (JSONException e) {
                     e.printStackTrace();
@@ -70,6 +84,37 @@ public class OkHttp {
 
         }
 
+    }
+
+
+
+    public   static ResultSub doPost(RequestBody   requestBody,String url){
+        Request request = new Request.Builder().url(url).post(requestBody)
+                .build();
+        ResultSub    sub =  new ResultSub();
+        Response response;
+        try {
+            response = mOkHttpClient.newCall(request).execute();
+            int  requestcode = response.code();
+            if (response.isSuccessful()) {
+                try {
+                    JSONObject resultJsonObject = new JSONObject(response.body().string());
+                    sub = new ResultSub();
+                    sub.obj = resultJsonObject;
+                    sub.code = requestcode;
+
+
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+
+            }
+        } catch (IOException e) {
+
+            e.printStackTrace();
+
+        }
+        return sub;
     }
 
 
