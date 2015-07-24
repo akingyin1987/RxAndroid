@@ -6,6 +6,8 @@ import android.os.Handler;
 import android.os.HandlerThread;
 import android.util.Log;
 import android.view.View;
+
+import java.sql.SQLOutput;
 import java.util.concurrent.TimeUnit;
 import rx.Observable;
 import rx.Subscriber;
@@ -27,8 +29,7 @@ public class MainActivity extends Activity {
         super.onCreate(savedInstanceState);
 
         setContentView(R.layout.main_activity);
-
-
+        System.out.println("fffffffffffS");
         BackgroundThread backgroundThread = new BackgroundThread();
         backgroundThread.start();
         backgroundHandler = new Handler(backgroundThread.getLooper());
