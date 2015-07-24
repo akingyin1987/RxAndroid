@@ -32,4 +32,5 @@ dependencies {
     compile files('src/main/libs/stetho-1.1.0.jar')
     compile files('src/main/libs/stetho-okhttp-1.1.1.jar')
     compile files('src/main/libs/commons-cli-1.2.jar')
+    compile project(':MeaterialDesing')
 }
