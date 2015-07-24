@@ -21,10 +21,13 @@ public class MainActivity extends Activity {
 
     private Handler backgroundHandler;
 
+
+
     @Override protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
         setContentView(R.layout.main_activity);
+
 
         BackgroundThread backgroundThread = new BackgroundThread();
         backgroundThread.start();
